@@ -19,6 +19,10 @@ Bool is_even(int num) {
   return num % 2 == 0;
 }
 
+int add(int num1, int num2) {
+  return num1 + num2;
+}
+
 __testStatus create_array_of_given_length() {
   Array *int_array = create_array(4);
   if(int_array->length == 4 && int_array->array != NULL) {
@@ -89,6 +93,27 @@ __testStatus filter_array_returning_empty() {
   return __Failure;
 }
 
+__testStatus reduce_empty_array() {
+  Array *int_array = create_array(0);
+  int result = reduce(int_array, 1, &add);
+  if(result == 1) {
+    return __Success;
+  }
+  return __Failure;
+}
+
+__testStatus sum_of_all() {
+  Array *int_array = create_array(5);
+  for(size_t i = 0; i < 5; i++) {
+    int_array->array[i] = i + 1;
+  }
+  int sum = reduce(int_array, 0, &add);
+  if(sum == 15) {
+    return __Success;
+  }
+  return __Failure;
+}
+
 int main(void) {
   describe("create array");
   test_case("should create array of given length", create_array_of_given_length());
@@ -102,5 +127,9 @@ int main(void) {
   test_case("should return array of filtered values based on predicate", filter_even_numbers());
   test_case("should return empty array if src is empty", filter_empty_array());
   test_case("should return empty array if filtered values are 0", filter_array_returning_empty());
+
+  describe("reduce function");
+  test_case("should return initial value if src array is empty", reduce_empty_array());
+  test_case("should return sum of all numbers in src array", sum_of_all());
   return 0;
 }
