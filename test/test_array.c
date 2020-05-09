@@ -15,6 +15,10 @@ Bool are_equal(int *a1, int *a2, int length) {
   return True;
 }
 
+Bool is_even(int num) {
+  return num % 2 == 0;
+}
+
 __testStatus create_array_of_given_length() {
   Array *int_array = create_array(4);
   if(int_array->length == 4 && int_array->array != NULL) {
@@ -53,6 +57,38 @@ __testStatus map_empty_array() {
   return __Failure;
 }
 
+__testStatus filter_even_numbers() {
+  Array *int_array = create_array(4);
+  for(size_t i = 0; i < 4; i++) {
+    int_array->array[i] = i + 1;
+  }
+  int filter_result[] = {2, 4};
+  Array *filtered_array = filter(int_array, &is_even);
+  if(filtered_array->length == 2 && are_equal(filter_result, filtered_array->array, 2)) {
+    return __Success;
+  }
+  return __Failure;
+}
+
+__testStatus filter_empty_array() {
+  Array *int_array = create_array(0);
+  Array *filtered_array = filter(int_array, &is_even);
+  if(filtered_array->length == 0 && filtered_array->array == NULL) {
+    return __Success;
+  }
+  return __Failure;
+}
+
+__testStatus filter_array_returning_empty() {
+  Array *int_array = create_array(1);
+  int_array->array[0] = 1;
+  Array *filtered_array = filter(int_array, &is_even);
+  if(filtered_array->length == 0 && filtered_array->array == NULL) {
+    return __Success;
+  }
+  return __Failure;
+}
+
 int main(void) {
   describe("create array");
   test_case("should create array of given length", create_array_of_given_length());
@@ -61,5 +97,10 @@ int main(void) {
   describe("map function");
   test_case("should return array of same length as source array with mapped values", map_multiply_by_two());
   test_case("should return empty array if source array is empty", map_empty_array());
+
+  describe("filter function");
+  test_case("should return array of filtered values based on predicate", filter_even_numbers());
+  test_case("should return empty array if src is empty", filter_empty_array());
+  test_case("should return empty array if filtered values are 0", filter_array_returning_empty());
   return 0;
 }
