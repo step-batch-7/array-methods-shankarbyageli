@@ -13,24 +13,24 @@ Array *create_array(int length) {
   return new_array;
 }
 
-Array *map(Array *array, Mapper mapper) {
-  Array *mapped_array = create_array(array->length);
+Array *map(Array *src, Mapper mapper) {
+  Array *mapped_array = create_array(src->length);
   if(mapped_array == NULL) {
     return NULL;
   }
-  for(size_t i = 0; i < array->length; i++) {
-    mapped_array->array[i] = (*mapper)(array->array[i]);
+  for(size_t i = 0; i < src->length; i++) {
+    mapped_array->array[i] = (*mapper)(src->array[i]);
   }
   return mapped_array;
 }
 
-Array *filter(Array *array, Predicate predicate) {
-  int temp[array->length];
+Array *filter(Array *src, Predicate predicate) {
+  int temp[src->length];
   int filtered_array_index = 0;
-  for(size_t i = 0; i < array->length; i++) {
-    Bool result = (*predicate)(array->array[i]);
+  for(size_t i = 0; i < src->length; i++) {
+    Bool result = (*predicate)(src->array[i]);
     if(result) {
-      temp[filtered_array_index] = array->array[i];
+      temp[filtered_array_index] = src->array[i];
       filtered_array_index++;
     }
   }
@@ -44,10 +44,10 @@ Array *filter(Array *array, Predicate predicate) {
   return filtered_array;
 }
 
-int reduce(Array *array, int init, Reducer reducer) {
+int reduce(Array *src, int init, Reducer reducer) {
   int result = init;
-  for(size_t i = 0; i < array->length; i++) {
-    result = (*reducer)(result, array->array[i]);
+  for(size_t i = 0; i < src->length; i++) {
+    result = (*reducer)(result, src->array[i]);
   }
   return result;
 }
