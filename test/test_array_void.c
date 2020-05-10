@@ -143,6 +143,32 @@ __testStatus filter_void_empty_array() {
   return __Failure;
 }
 
+__testStatus reduce_void_empty_array() {
+  ArrayVoid_ptr int_array = create_void_array(0);
+  Object init = malloc(sizeof(int));
+  *(int *)init = 1;
+  Object result = reduce_void(int_array, init, &add);
+  if(*(int *)result == 1) {
+    return __Success;
+  }
+  return __Failure;
+}
+
+__testStatus reduce_void_sum_of_numbers() {
+  ArrayVoid_ptr int_array = create_void_array(5);
+  for(size_t i = 0; i < 5; i++) {
+    int_array->array[i] = malloc(sizeof(int));
+    *(int *)int_array->array[i] = i + 1;
+  }
+  Object init = malloc(sizeof(int));
+  *(int *)init = 0;
+  Object sum = reduce_void(int_array, init, &add);
+  if(*(int *)sum == 15) {
+    return __Success;
+  }
+  return __Failure;
+}
+
 int main(void) {
   describe("create void array");
   test_case("should create void array of given length", create_void_array_of_given_length());
@@ -158,5 +184,9 @@ int main(void) {
   test_case("should return empty array if src is empty", filter_void_empty_array());
   test_case("should return filtered array of vowels", filter_void_vowels());
 
+  describe("reduce function");
+  test_case("should return initial value if src array is empty", reduce_void_empty_array());
+  test_case("should return sum of all numbers in src array", reduce_void_sum_of_numbers());
+  
   return 0;
 }
