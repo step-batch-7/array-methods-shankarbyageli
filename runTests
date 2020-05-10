@@ -1,5 +1,5 @@
 #! /bin/bash
 
-gcc test/test_array.c testLib/mocha.c array.c 
+gcc test/test_array.c array.c array_void.c testLib/mocha.c
 ./a.out
 rm a.out
